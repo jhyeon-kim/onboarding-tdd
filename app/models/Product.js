@@ -12,25 +12,14 @@ export default class Product {
         return this._name;
     }
 
-    set name(value) {
-        this._name = value;
-    }
-
     get price() {
         return this._price;
-    }
-
-    set price(value) {
-        this._price = value;
     }
 
     get productId() {
         return this._productId;
     }
 
-    set productId(value) {
-        this._productId = value;
-    }
 }
 //
 // export const

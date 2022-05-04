@@ -11,10 +11,6 @@ export default class User {
         return this._name;
     }
 
-    set name(value) {
-        this._name = value;
-    }
-
     get products() {
         return this._products;
     }
@@ -27,9 +23,6 @@ export default class User {
         return this._userId;
     }
 
-    set userId(value) {
-        this._userId = value;
-    }
 
 // 구매내역 추가시키기
     addProduct(productId) {

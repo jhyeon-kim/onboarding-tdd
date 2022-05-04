@@ -1,9 +1,7 @@
 import StateError from "../error/StateError.js";
-import axios from "axios";
 import { v4 } from 'uuid';
 
 import NiceApiError from "../error/NiceApiError.js";
-import UserStorage from "./UserStorage.js";
 
 
 export const ORDER_STATE = {
@@ -32,32 +30,16 @@ export default class Order {
         return this._orderId;
     }
 
-    set orderId(value) {
-        this._orderId = value;
-    }
-
     get userId() {
         return this._userId;
-    }
-
-    set userId(value) {
-        this._userId = value;
     }
 
     get productId() {
         return this._productId;
     }
 
-    set productId(value) {
-        this._productId = value;
-    }
-
     get price() {
         return this._price;
-    }
-
-    set price(value) {
-        this._price = value;
     }
 
     get state() {
@@ -70,10 +52,6 @@ export default class Order {
 
     get createdAt() {
         return this._createdAt;
-    }
-
-    set createdAt(value) {
-        this._createdAt = value;
     }
 
     get updatedAt() {
