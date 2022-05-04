@@ -1,4 +1,9 @@
 import StateError from "../error/StateError.js";
+import axios from "axios";
+import { v4 } from 'uuid';
+
+import NiceApiError from "../error/NiceApiError.js";
+
 
 export const ORDER_STATE = {
     STARTED: "orderStarted",
@@ -13,12 +18,21 @@ export const ORDER_STATE = {
 export default class Order {
 
     constructor(userId, productId, price, state, createdAt, updatedAt) {
+        this._orderId = v4();
         this._userId = userId;
         this._productId = productId;
         this._price = price;
         this._state = state;
         this._createdAt = createdAt;
         this._updatedAt = updatedAt;
+    }
+
+    get orderId() {
+        return this._orderId;
+    }
+
+    set orderId(value) {
+        this._orderId = value;
     }
 
     get userId() {
@@ -72,8 +86,16 @@ export default class Order {
 
 export const completeOrder = (orderObject) => {
     checkState(orderObject, ORDER_STATE.STARTED);
-    //todo 진짜 로직
+    console.log(checkNiceApiResponse());
+    if (checkNiceApiResponse().statusCode !== 3001) {
+        throw new NiceApiError(checkNiceApiResponse.statusCode);
+    }
     orderObject.state = ORDER_STATE.PAID;
+}
+
+export const checkNiceApiResponse = () => {
+    // axios post 요청해야 하는. 현재로서는 비어있는 함수.
+    return {success: true, statusCode: 3001};
 }
 
 export const cancelOrder = (orderObject) => {
@@ -93,5 +115,12 @@ function checkState(orderObject, state) {
         throw new StateError(`PAID 이전 상태는 ${state} 이어야 한다.`);
     }
 }
+
+// todo axios call 본체 함수(속은 비었어도) 만들어야 할까. 아닌가.. 지금은 완전 안했음.
+// export const axiosCall = () => {
+//     return axios
+//         .post("https://web.nicepay.co.kr/v3/v3Payment.jsp")
+//         .then((response) => response.data)
+// };
 
 
