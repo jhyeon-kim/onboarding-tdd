@@ -3,6 +3,7 @@ import axios from "axios";
 import { v4 } from 'uuid';
 
 import NiceApiError from "../error/NiceApiError.js";
+import UserStorage from "./UserStorage.js";
 
 
 export const ORDER_STATE = {
@@ -82,6 +83,17 @@ export default class Order {
     set updatedAt(value) {
         this._updatedAt = value;
     }
+}
+
+export const initOrder = (userObject, productId) => {
+    if (checkIfPaidBefore(userObject, productId)) {
+        throw new Error("User has bought this product before.");
+    }
+    return new Order(userObject._userId, productId)
+}
+
+function checkIfPaidBefore(userObject, productId) {
+    return !!userObject.findProduct(productId);
 }
 
 export const completeOrder = (orderObject) => {

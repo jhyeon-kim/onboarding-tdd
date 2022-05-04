@@ -1,6 +1,8 @@
-import Order, {cancelOrder, completeCancel, completeOrder, ORDER_STATE, checkNiceApiResponse } from "../app/models/Order.js"
+import Order, {cancelOrder, completeCancel, completeOrder, ORDER_STATE, checkNiceApiResponse, initOrder } from "../app/models/Order.js"
 import StateError from "../app/error/StateError.js";
 import NiceApiError from "../app/error/NiceApiError.js";
+import UserStorage from "../app/models/UserStorage.js";
+import {beforeEach} from "@jest/globals";
 
 // todo (1) database setup (2) mocking axios response from nicepay (3) anything else..
 
@@ -19,6 +21,7 @@ import NiceApiError from "../app/error/NiceApiError.js";
 *       (1) 재고 부족 (예 - 인원수 기준 얼리버드 적용 특가 재고 이미 참)
 *       (2) 주문 관련 필드 누락
 *       (3) 해당 사용자 동일 강의 구매 내역 있음 (mysql or mongodb)
+* 4. 주문 상태 변경
 * */
 
 let now;
@@ -77,18 +80,19 @@ describe('주문의 이전 상태 의존성 테스트', () => {
         completeCancel(order);
         expect(order.state).toEqual(ORDER_STATE.CANCEL_COMPLETED);
     });
-
 });
 
 /* 3. 다음의 경우 결제에 실패한다.
    1) nicePay api에서의 응답이 3011이 아니면 결제가 불가하다
    2) 비즈니스 로직 관련
-       (1) 재고 부족 (예 - 인원수 기준 얼리버드 적용 특가 재고 이미 참)
-       (2) 주문 관련 필드 누락
-       (3) 해당 사용자 동일 강의 구매 내역 있음 (mysql or mongodb)*/
+       (1) 해당 사용자 동일 강의 구매 내역 있음
+       (2) 재고 부족 (예 - 인원수 기준 얼리버드 적용 특가 재고 이미 참)*/
+
+
+// 1) nicePay api에서의 응답이 3011이 아니면 결제가 불가하다
 
 describe('nicepay로부터의 응답에 따른 처리 테스트', () => {
-    test('niceapi 응답코드가 3011이면 카드사 운영시간이 아니므로 결제 불가하다.', () => {
+    test('niceapi 응답코드가 3011이면 카드사 운영시간이 아니므로 결제 불가하다. (실패)', () => {
         let order = new Order();
         order.state = ORDER_STATE.STARTED;
         if (checkNiceApiResponse().statusCode === 3013) {
@@ -97,17 +101,38 @@ describe('nicepay로부터의 응답에 따른 처리 테스트', () => {
     });
 });
 
-// todo 비즈니스 로직 관련 테스트 코드
-// describe('비즈니스 로직 및 데이터 상태에 따른 처리 테스트', () => {
-//     test("기존에 구매하지 않았던 강의만 구매할 수 있다. (실패)", () => {
-//
-//     });
-//
-//
-//     test('인원 수 제한 있는 ', () => {
-//
-//     });
-// });
+/*
+2) 비즈니스 로직 관련
+(1) 해당 사용자 동일 강의 구매 내역 있음
+(2) 재고 부족 (예 - 인원수 기준 얼리버드 적용 특가 재고 이미 참)
+*/
+
+describe('사용자 구매내역에 따른 주문 개시 여부 테스트', () => {
+    const userStorage = new UserStorage();
+    const user = userStorage.users[0];
+    beforeEach(() => {
+        user.addProduct("same");
+    });
+
+    afterEach(() => {
+        user.products = [];
+    });
+
+    test("기존에 구매하지 않았던 강의만 구매할 수 있다. (실패)", () => {
+        const userStorage = new UserStorage();
+        const user = userStorage.users[0];
+        user.addProduct("same");
+        expect(() => initOrder(user, "same")).toThrow("User has bought this product before.");
+    });
+
+    test("기존에 구매하지 않았던 강의만 구매할 수 있다. (성공)", () => {
+        const userStorage = new UserStorage();
+        const user = userStorage.users[0];
+        user.addProduct("product123");
+        initOrder(user,"different");
+    });
+
+});
 
 // helper code
 function createSampleOrderWithState(state) {

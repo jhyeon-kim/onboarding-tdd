@@ -37,7 +37,14 @@ export default class User {
     }
 
     findProduct(productId) {
-        return !!this._products.contains(productId);
+        for (const productIdElement of this.products) {
+            if (productIdElement === productId) {
+                return true;
+            }
+        }
+        return false;
+
+        // return !!this._products.contains(productId);
 
     }
 
