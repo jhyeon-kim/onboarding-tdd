@@ -119,16 +119,10 @@ describe('사용자 구매내역에 따른 주문 개시 여부 테스트', () =
     });
 
     test("기존에 구매하지 않았던 강의만 구매할 수 있다. (실패)", () => {
-        const userStorage = new UserStorage();
-        const user = userStorage.users[0];
-        user.addProduct("same");
         expect(() => initOrder(user, "same")).toThrow("User has bought this product before.");
     });
 
     test("기존에 구매하지 않았던 강의만 구매할 수 있다. (성공)", () => {
-        const userStorage = new UserStorage();
-        const user = userStorage.users[0];
-        user.addProduct("product123");
         initOrder(user,"different");
     });
 
