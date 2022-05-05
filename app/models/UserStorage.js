@@ -1,5 +1,7 @@
 import User from "./User.js";
 
+// Dummy data and storage
+
 const user1 = new User("Ice-bear");
 const user2 = new User("Panda");
 const user3 = new User("Brownie");

@@ -36,9 +36,6 @@ export default class User {
             }
         }
         return false;
-
-        // return !!this._products.contains(productId);
-
     }
 
 }

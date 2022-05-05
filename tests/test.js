@@ -3,6 +3,9 @@ import StateError from "../app/error/StateError.js";
 import NiceApiError from "../app/error/NiceApiError.js";
 import UserStorage from "../app/models/UserStorage.js";
 import {beforeEach} from "@jest/globals";
+import ProductStorage from "../app/models/ProductStorage.js";
+import StockError from "../app/error/StockError.js";
+import Product from "../app/models/Product.js";
 
 // todo (1) database setup (2) mocking axios response from nicepay (3) anything else..
 
@@ -25,6 +28,8 @@ import {beforeEach} from "@jest/globals";
 * */
 
 let now;
+const userStorage = new UserStorage();
+const user = userStorage.users[0];
 
  /*2. 주문 상태는 이전 상태에 대해 의존성을 갖는다.
    1) PAID 이전 상태는 STARTED 이어야 한다.
@@ -108,10 +113,14 @@ describe('nicepay로부터의 응답에 따른 처리 테스트', () => {
 */
 
 describe('사용자 구매내역에 따른 주문 개시 여부 테스트', () => {
-    const userStorage = new UserStorage();
-    const user = userStorage.users[0];
+
+    let same;
+    let different;
+
     beforeEach(() => {
-        user.addProduct("same");
+        same = new Product("same", 10000, 1e9);
+        different = new Product("different", 10000, 1e9);
+        user.addProduct(same.productId);
     });
 
     afterEach(() => {
@@ -119,11 +128,23 @@ describe('사용자 구매내역에 따른 주문 개시 여부 테스트', () =
     });
 
     test("기존에 구매하지 않았던 강의만 구매할 수 있다. (실패)", () => {
-        expect(() => initOrder(user, "same")).toThrow("User has bought this product before.");
+        expect(() => initOrder(user, same)).toThrow("User has bought this product before.");
     });
 
-    test("기존에 구매하지 않았던 강의만 구매할 수 있다. (성공)", () => {
-        initOrder(user,"different");
+    // test("기존에 구매하지 않았던 강의만 구매할 수 있다. (성공)", () => {
+    //     initOrder(user, different);
+    // });
+});
+
+describe('재고에 따른 주문 개시 여부 테스트', () => {
+    const productStorage = new ProductStorage();
+    const outOfStockProduct = productStorage.products[0];
+    const enoughStockProduct = productStorage.products[1];
+
+    // console.log("outOfStock:: ", outOfStockProduct);
+
+    test('재고가 없다면 주문을 개시할 수 없다. (실패)', () => {
+        expect(() => initOrder(user, outOfStockProduct).toThrow(StockError));
     });
 
 });

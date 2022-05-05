@@ -1,7 +1,11 @@
 import StateError from "../error/StateError.js";
+import axios from "axios";
 import { v4 } from 'uuid';
 
 import NiceApiError from "../error/NiceApiError.js";
+import UserStorage from "./UserStorage.js";
+import ProductStorage from "./ProductStorage.js";
+import StockError from "../error/StockError.js";
 
 
 export const ORDER_STATE = {
@@ -63,14 +67,23 @@ export default class Order {
     }
 }
 
-export const initOrder = (userObject, productId) => {
-    if (checkIfPaidBefore(userObject, productId)) {
+export const initOrder = (userObject, productObject) => {
+
+    if (checkIfPaidBefore(userObject, productObject)) {
         throw new Error("User has bought this product before.");
     }
-    return new Order(userObject._userId, productId)
+
+    const subtracted = productObject.subStock();
+
+    if (!!subtracted) {
+        throw new StockError();
+    }
+
+    return new Order(userObject._userId, productId);
 }
 
-function checkIfPaidBefore(userObject, productId) {
+function checkIfPaidBefore(userObject, productObject) {
+    const productId = productObject._productId;
     return !!userObject.findProduct(productId);
 }
 
@@ -90,13 +103,11 @@ export const checkNiceApiResponse = () => {
 
 export const cancelOrder = (orderObject) => {
     checkState(orderObject, ORDER_STATE.PAID);
-    //todo 진짜 로직
     orderObject.state = ORDER_STATE.CANCEL_REQUESTED;
 }
 
 export const completeCancel = (orderObject) => {
     checkState(orderObject, ORDER_STATE.CANCEL_REQUESTED);
-    //todo 진짜 로직
     orderObject.state = ORDER_STATE.CANCEL_COMPLETED;
 }
 
