@@ -1,11 +1,7 @@
 import StateError from "../error/StateError.js";
-import axios from "axios";
-import { v4 } from 'uuid';
 import mongoose from "mongoose";
 
 import NiceApiError from "../error/NiceApiError.js";
-import UserStorage from "./UserStorage.js";
-import ProductStorage from "./ProductStorage.js";
 import StockError from "../error/StockError.js";
 
 const Schema = mongoose.Schema;
@@ -41,19 +37,22 @@ export const ORDER_STATE = {
     REFUND_COMPLETED: "refundCompleted"
 }
 
+// -> STARTED
 export const initOrder = (userObject, productObject) => {
-
     if (checkIfPaidBefore(userObject, productObject)) {
         throw new Error("User has bought this product before.");
     }
-
     const subtracted = productObject.subStock();
 
-    if (!!subtracted) {
+    if (subtracted === false) {
         throw new StockError();
     }
-
-    return new Order(userObject._userId, productId);
+    return new Order({
+        userId: userObject._userId,
+        productId: productObject.productId,
+        price: productObject.price,
+        state: ORDER_STATE.STARTED
+    });
 }
 
 function checkIfPaidBefore(userObject, productObject) {
@@ -61,6 +60,7 @@ function checkIfPaidBefore(userObject, productObject) {
     return !!userObject.findProduct(productId);
 }
 
+// -> PAID
 export const completeOrder = (orderObject) => {
     checkState(orderObject, ORDER_STATE.STARTED);
     console.log(checkNiceApiResponse());
@@ -75,11 +75,13 @@ export const checkNiceApiResponse = () => {
     return {success: true, statusCode: 3001};
 }
 
+// -> CANCEL_REQUESTED
 export const cancelOrder = (orderObject) => {
     checkState(orderObject, ORDER_STATE.PAID);
     orderObject.state = ORDER_STATE.CANCEL_REQUESTED;
 }
 
+// -> CANCEL_COMPLETED
 export const completeCancel = (orderObject) => {
     checkState(orderObject, ORDER_STATE.CANCEL_REQUESTED);
     orderObject.state = ORDER_STATE.CANCEL_COMPLETED;

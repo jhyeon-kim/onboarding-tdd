@@ -18,7 +18,3 @@ export default class ProductStorage {
         return null;
     }
 };
-console.log("🤓", outOfStock.productId)
-const productStorage = new ProductStorage();
-const product = productStorage.findProductById(outOfStock.productId);
-console.log("🍀", product.productId, product.name);

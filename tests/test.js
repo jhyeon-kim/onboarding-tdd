@@ -29,9 +29,8 @@ import Product from "../app/models/Product.js";
 * 3. 다음의 경우 결제에 실패한다.
 *   1) nicePay api 에서의 응답이 3011이 아니면 결제가 불가하다.
 *   2) 비즈니스 로직 관련
-*       (1) 재고 부족 (예 - 인원수 기준 얼리버드 적용 특가 재고 이미 참)
-*       (2) 주문 관련 필드 누락
-*       (3) 해당 사용자 동일 강의 구매 내역 있음 (mysql or mongodb)
+*       (1) 해당 사용자 동일 강의 구매 내역 있음
+*       (2) 재고 부족
 * 4. 주문 상태 변경
 * */
 
@@ -139,9 +138,11 @@ describe('사용자 구매내역에 따른 주문 개시 여부 테스트', () =
         expect(() => initOrder(user, same)).toThrow("User has bought this product before.");
     });
 
-    // test("기존에 구매하지 않았던 강의만 구매할 수 있다. (성공)", () => {
-    //     initOrder(user, different);
-    // });
+    test("기존에 구매하지 않았던 강의만 구매할 수 있다. (성공)", () => {
+        // console.log(different)
+
+        initOrder(user, different);
+    });
 });
 
 describe('재고에 따른 주문 개시 여부 테스트', () => {
@@ -149,10 +150,12 @@ describe('재고에 따른 주문 개시 여부 테스트', () => {
     const outOfStockProduct = productStorage.products[0];
     const enoughStockProduct = productStorage.products[1];
 
-    // console.log("outOfStock:: ", outOfStockProduct);
-
     test('재고가 없다면 주문을 개시할 수 없다. (실패)', () => {
         expect(() => initOrder(user, outOfStockProduct).toThrow(StockError));
+    });
+
+    test('재고가 없다면 주문을 개시할 수 없다. (성공)', () => {
+        initOrder(user, enoughStockProduct);
     });
 
 });
@@ -165,5 +168,4 @@ function createSampleOrderWithState(state) {
         price: 10000,
         state: state
     });
-    // return new Order(1, 1, 100000, state, now, now);
 }

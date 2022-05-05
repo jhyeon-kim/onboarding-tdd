@@ -26,17 +26,16 @@ export default class Product {
         return this._stock;
     }
 
+    set stock(value) {
+        this._stock = value;
+    }
+
     subStock() {
-        if (this._stock > 0) {
-            this._stock -= 1;
+        if (this.stock > 0) {
+            this.stock -= 1;
             return true;
         } else {
             return false;
         }
     }
-
 }
-
-const product = new Product("안뇽", "131313", 0);
-console.log(product.subStock())
-console.log(product.stock)
