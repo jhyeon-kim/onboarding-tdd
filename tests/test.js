@@ -27,7 +27,7 @@ import Product from "../app/models/Product.js";
 *   2) CANCEL_REQUESTED 이전 상태는 PAID 이어야 한다.
 *   3) CANCEL_COMPLETED 이전 상태는 CANCEL_REQUESTED 이어야 한다.
 * 3. 다음의 경우 결제에 실패한다.
-*   1) nicePay api 에서의 응답이 3011이 아니면 결제가 불가하다.
+*   1) nicePay routes 에서의 응답이 3011이 아니면 결제가 불가하다.
 *   2) 비즈니스 로직 관련
 *       (1) 해당 사용자 동일 강의 구매 내역 있음
 *       (2) 재고 부족
