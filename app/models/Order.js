@@ -1,12 +1,35 @@
 import StateError from "../error/StateError.js";
 import axios from "axios";
 import { v4 } from 'uuid';
+import mongoose from "mongoose";
 
 import NiceApiError from "../error/NiceApiError.js";
 import UserStorage from "./UserStorage.js";
 import ProductStorage from "./ProductStorage.js";
 import StockError from "../error/StockError.js";
 
+const Schema = mongoose.Schema;
+
+const orderSchema = new Schema({
+    userId: {
+        type: String,
+        required: true
+    },
+    productId: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: Number,
+        required: true
+    },
+    state: {
+        type: String,
+        required: true
+    }
+}, {timestamps: true});
+
+export const Order = mongoose.model('Order', orderSchema);
 
 export const ORDER_STATE = {
     STARTED: "orderStarted",
@@ -16,55 +39,6 @@ export const ORDER_STATE = {
     // cancel 과 refund 둘다 있어야 할까?
     REFUND_REQUESTED: "refundRequested",
     REFUND_COMPLETED: "refundCompleted"
-}
-
-export default class Order {
-
-    constructor(userId, productId, price, state, createdAt, updatedAt) {
-        this._orderId = v4();
-        this._userId = userId;
-        this._productId = productId;
-        this._price = price;
-        this._state = state;
-        this._createdAt = createdAt;
-        this._updatedAt = updatedAt;
-    }
-
-    get orderId() {
-        return this._orderId;
-    }
-
-    get userId() {
-        return this._userId;
-    }
-
-    get productId() {
-        return this._productId;
-    }
-
-    get price() {
-        return this._price;
-    }
-
-    get state() {
-        return this._state;
-    }
-
-    set state(value) {
-        this._state = value;
-    }
-
-    get createdAt() {
-        return this._createdAt;
-    }
-
-    get updatedAt() {
-        return this._updatedAt;
-    }
-
-    set updatedAt(value) {
-        this._updatedAt = value;
-    }
 }
 
 export const initOrder = (userObject, productObject) => {

@@ -1,4 +1,11 @@
-import Order, {cancelOrder, completeCancel, completeOrder, ORDER_STATE, checkNiceApiResponse, initOrder } from "../app/models/Order.js"
+import {
+    cancelOrder,
+    checkNiceApiResponse,
+    completeCancel,
+    completeOrder,
+    initOrder, Order,
+    ORDER_STATE
+} from "../app/models/Order.js"
 import StateError from "../app/error/StateError.js";
 import NiceApiError from "../app/error/NiceApiError.js";
 import UserStorage from "../app/models/UserStorage.js";
@@ -6,6 +13,7 @@ import {beforeEach} from "@jest/globals";
 import ProductStorage from "../app/models/ProductStorage.js";
 import StockError from "../app/error/StockError.js";
 import Product from "../app/models/Product.js";
+
 
 // todo (1) database setup (2) mocking axios response from nicepay (3) anything else..
 
@@ -151,5 +159,11 @@ describe('재고에 따른 주문 개시 여부 테스트', () => {
 
 // helper code
 function createSampleOrderWithState(state) {
-    return new Order(1, 1, 100000, state, now, now);
+    return new Order({
+        userId: "user1",
+        productId: "product1",
+        price: 10000,
+        state: state
+    });
+    // return new Order(1, 1, 100000, state, now, now);
 }
