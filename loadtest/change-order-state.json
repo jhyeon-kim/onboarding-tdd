@@ -1,0 +1,48 @@
+{
+  "config": {
+    "target": "http://localhost:3000",
+    "phases": [
+      {
+        "duration": 30,
+        "arrivalRate": 5,
+        "name": "warm up"
+      },
+      {
+        "duration": 120,
+        "arrivalRate": 5,
+        "rampTo": 50,
+        "name": "ramp up load"
+      },
+      {
+        "duration": 60,
+        "arrivalRate": 50,
+        "name": "sustain load"
+      }
+    ],
+    "defaults": {
+      "headers": {
+        "User-Agent": "Artillery"
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "name": "order initiated",
+      "flow": [
+        {
+          "get": {
+            "url": "/dummy/products/1",
+            "capture": {
+              "json": "$._productId", "as": "productId"
+            }
+          }
+        },
+        {"post": {
+           "url": "/dummy/orders",
+          "json": {"userId": "testUser", "productId": "{{productId}}", "price": 5000000, "state": "orderStarted"}
+         }
+        }
+      ]
+    }
+  ]
+}

@@ -1,11 +1,9 @@
 import OrderStorage from "../models/OrderStorage.js";
 import {Order} from "../models/Order.js";
 import ProductStorage from "../models/ProductStorage.js";
-import UserStorage from "../models/UserStorage.js";
 
 const orderStorage = new OrderStorage();
 const productStorage = new ProductStorage();
-const userStorage = new UserStorage();
 
 export default class OrderService {
 

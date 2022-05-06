@@ -36,16 +36,10 @@ const orderCancelCompleted = new Order({
     state: ORDER_STATE.CANCEL_COMPLETED
 })
 
-
 export default class OrderStorage {
     orders = [orderStarted, orderPaid, orderCancelRequested, orderCancelCompleted];
-
     findAll() {
         return this.orders;
     }
-
 };
-// const orderStorage = new OrderStorage();
-// const findAll = orderStorage.findAll();
-//
-// console.log("🍀🍀🍀", findAll)
+

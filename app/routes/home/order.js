@@ -1,5 +1,5 @@
 import express from "express";
-import {Order} from "../../models/Order.js";
+import {Order, initOrder, cancelOrder} from "../../models/Order.js";
 import OrderStorage from "../../models/OrderStorage.js";
 import ProductStorage from "../../models/ProductStorage.js";
 import UserStorage from "../../models/UserStorage.js";
@@ -65,25 +65,20 @@ router.get("/dummy/products", (req, res) => {
     res.send(products);
 });
 
-router.post("/dummy/orders", (req, res) => {
-    const body = req.body;
-    const result =  orderService.initOrder(body);
-    res.json(result);
-
-    //
-    // const product = productStorage.findProductById(body.productId);
-    // if (product === null) {
-    //     res.json({ok: false, errorMessage: "해당 id의 상품이 없습니다."})
-    // }
-    // if (product.subStock() === false) {
-    //     res.json({ok: false, errorMessage: "재고 부족!"})
-    // }
-    //
-    // orderStorage.orders.push(new Order(req.body));
-    // res.json({ok: true, data: orderStorage.orders});
-
+// loadtest에서 다루려고... 임시적으로 만든...😂
+router.get(`/dummy/products/1`, (req, res) => {
+    res.send(products[1]);
 });
 
-// router.post("dummy/")
-//
+router.post("/dummy/orders", (req, res) => {
+    res.json(orderService.initOrder(req.body));
+});
 
+//uri 이렇게 쓰면 안 된다고 했는데 ..
+router.post("/dummy/orders/cancel", (req, res) => {
+    res.json(cancelOrder(req.body));
+});
+
+// router.post("/dummy/orders/cancel")
+//
+//
