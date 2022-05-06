@@ -8,10 +8,10 @@ mongoose.connect(DATABASE_URI)
     .catch((err) => console.log(err));
 
 export const app = express();
-import {router} from "./routes/home/order.js";
+import {router as orderRouter} from "./routes/home/order.js";
 import {router as userRouter} from "./routes/home/user.js";
 
-app.use("/", router);
+app.use("/", orderRouter);
 app.use("/user", userRouter);
 
 const PORT = process.env.PORT;

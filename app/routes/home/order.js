@@ -1,7 +1,7 @@
 import express from "express";
 import {Order, initOrder, cancelOrder} from "../../models/Order.js";
-import OrderStorage from "../../models/OrderStorage.js";
-import ProductStorage from "../../models/ProductStorage.js";
+import OrderStorage from "../../models/dummyStorage/OrderStorage.js";
+import ProductStorage from "../../models/dummyStorage/ProductStorage.js";
 import OrderService from "../../service/OrderService.js";
 
 export const router = express.Router();

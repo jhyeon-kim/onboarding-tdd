@@ -8,11 +8,11 @@ import {
 } from "../app/models/Order.js"
 import StateError from "../app/error/StateError.js";
 import NiceApiError from "../app/error/NiceApiError.js";
-import UserStorage from "../app/models/UserStorage.js";
+import UserStorage from "../app/models/dummyStorage/UserStorage.js";
 import {beforeEach} from "@jest/globals";
-import ProductStorage from "../app/models/ProductStorage.js";
+import ProductStorage from "../app/models/dummyStorage/ProductStorage.js";
 import StockError from "../app/error/StockError.js";
-import Product from "../app/models/Product.js";
+import {Product} from "../app/models/Product.js";
 import {addProduct} from "../app/models/User.js";
 
 
@@ -32,7 +32,6 @@ import {addProduct} from "../app/models/User.js";
 *   2) 비즈니스 로직 관련
 *       (1) 해당 사용자 동일 강의 구매 내역 있음
 *       (2) 재고 부족
-* 4. 주문 상태 변경
 * */
 
 let now;
@@ -120,10 +119,18 @@ describe('사용자 구매내역에 따른 주문 개시 여부 테스트', () =
     let different;
 
     beforeEach(() => {
-        same = new Product("same", 10000, 1e9);
-        different = new Product("different", 10000, 1e9);
-        // user.addProduct(same.productId);
-        addProduct(user, same.productId);
+        same = new Product({
+            name: "test1",
+            price: 5000000,
+            stock: 5000000
+        });
+        different = new Product({
+            name: "test2",
+            price: 5000000,
+            stock: 5000000
+        });
+        addProduct(user, same.id);
+
     });
 
     afterEach(() => {
@@ -156,7 +163,6 @@ describe('재고에 따른 주문 개시 여부 테스트', () => {
 
 });
 
-
 // helper code
 function createSampleOrderWithState(state) {
     return new Order({
@@ -166,14 +172,5 @@ function createSampleOrderWithState(state) {
         state: state
     });
 }
-// // practice..
-// import { useAxios } from "../app/service/niceapi.js"
-// import "whatwg-fetch";
-//
-// describe('nicepay api의 mock 응답에 따른 처리 테스트', () => {
-//     test('뭐라고 이름을 할까. (성공)', async () => {
-//         const result = await useAxios();
-//         console.log(result);
-//     });
-// });
+
 

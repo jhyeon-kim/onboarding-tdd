@@ -1,4 +1,4 @@
-import {Order, ORDER_STATE} from "./Order.js";
+import {Order, ORDER_STATE} from "../Order.js";
 import ProductStorage from "./ProductStorage.js";
 
 const productStorage = new ProductStorage();

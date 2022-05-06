@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import NiceApiError from "../error/NiceApiError.js";
 import StockError from "../error/StockError.js";
 import {findProduct} from "./User.js";
+import {subStock} from "./Product.js";
 
 const Schema = mongoose.Schema;
 
@@ -40,7 +41,7 @@ export const initOrder = (userObject, productObject) => {
     if (checkIfPaidBefore(userObject, productObject)) {
         throw new Error("User has bought this product before.");
     }
-    const subtracted = productObject.subStock();
+    const subtracted = subStock(productObject);
     if (subtracted === false) {
         throw new StockError();
     }
@@ -84,7 +85,7 @@ function checkState(orderObject, state) {
 }
 
 function checkIfPaidBefore(userObject, productObject) {
-    const productId = productObject._productId;
+    const productId = productObject.id;
     // return !!userObject.findProduct(productId);
     return findProduct(userObject, productId);
 }
