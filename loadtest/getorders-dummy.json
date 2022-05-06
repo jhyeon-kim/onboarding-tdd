@@ -1,0 +1,21 @@
+{
+  "config": {
+    "target": "http://localhost:3000",
+    "phases": [
+      {"duration": 50, "arrivalRate": 100}
+    ],
+    "defaults": {
+      "headers": {
+        "User-Agent": "Artillery"
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "name": "Get orders from dummy",
+      "flow": [
+        { "get": { "url": "/dummy/orders" } }
+      ]
+    }
+  ]
+}

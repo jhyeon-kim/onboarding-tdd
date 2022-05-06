@@ -113,6 +113,8 @@ describe('nicepay로부터의 응답에 따른 처리 테스트', () => {
     });
 });
 
+
+
 /*
 2) 비즈니스 로직 관련
 (1) 해당 사용자 동일 강의 구매 내역 있음
@@ -139,8 +141,6 @@ describe('사용자 구매내역에 따른 주문 개시 여부 테스트', () =
     });
 
     test("기존에 구매하지 않았던 강의만 구매할 수 있다. (성공)", () => {
-        // console.log(different)
-
         initOrder(user, different);
     });
 });
@@ -169,3 +169,14 @@ function createSampleOrderWithState(state) {
         state: state
     });
 }
+// // practice..
+// import { useAxios } from "../app/service/niceapi.js"
+// import "whatwg-fetch";
+//
+// describe('nicepay api의 mock 응답에 따른 처리 테스트', () => {
+//     test('뭐라고 이름을 할까. (성공)', async () => {
+//         const result = await useAxios();
+//         console.log(result);
+//     });
+// });
+

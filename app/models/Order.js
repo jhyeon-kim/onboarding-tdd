@@ -54,7 +54,6 @@ export const initOrder = (userObject, productObject) => {
 // -> PAID
 export const completeOrder = (orderObject) => {
     checkState(orderObject, ORDER_STATE.STARTED);
-    console.log(checkNiceApiResponse());
     if (checkNiceApiResponse().statusCode !== 3001) {
         throw new NiceApiError(checkNiceApiResponse.statusCode);
     }
