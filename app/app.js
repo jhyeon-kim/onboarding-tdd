@@ -9,8 +9,10 @@ mongoose.connect(DATABASE_URI)
 
 export const app = express();
 import {router} from "./routes/home/order.js";
+import {router as userRouter} from "./routes/home/user.js";
 
 app.use("/", router);
+app.use("/user", userRouter);
 
 const PORT = process.env.PORT;
 

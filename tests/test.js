@@ -13,6 +13,7 @@ import {beforeEach} from "@jest/globals";
 import ProductStorage from "../app/models/ProductStorage.js";
 import StockError from "../app/error/StockError.js";
 import Product from "../app/models/Product.js";
+import {addProduct} from "../app/models/User.js";
 
 
 // todo (1) database setup (2) mocking axios response from nicepay (3) anything else..
@@ -127,7 +128,8 @@ describe('사용자 구매내역에 따른 주문 개시 여부 테스트', () =
     beforeEach(() => {
         same = new Product("same", 10000, 1e9);
         different = new Product("different", 10000, 1e9);
-        user.addProduct(same.productId);
+        // user.addProduct(same.productId);
+        addProduct(user, same.productId);
     });
 
     afterEach(() => {
@@ -154,9 +156,11 @@ describe('재고에 따른 주문 개시 여부 테스트', () => {
 
     test('재고가 없다면 주문을 개시할 수 없다. (성공)', () => {
         initOrder(user, enoughStockProduct);
+        //todo 재고의 수도 줄어든다...
     });
 
 });
+
 
 // helper code
 function createSampleOrderWithState(state) {

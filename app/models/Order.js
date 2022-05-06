@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 import NiceApiError from "../error/NiceApiError.js";
 import StockError from "../error/StockError.js";
+import {findProduct} from "./User.js";
 
 const Schema = mongoose.Schema;
 
@@ -84,7 +85,8 @@ function checkState(orderObject, state) {
 
 function checkIfPaidBefore(userObject, productObject) {
     const productId = productObject._productId;
-    return !!userObject.findProduct(productId);
+    // return !!userObject.findProduct(productId);
+    return findProduct(userObject, productId);
 }
 
 export const checkNiceApiResponse = () => {

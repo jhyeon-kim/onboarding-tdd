@@ -1,41 +1,33 @@
-import { v4 } from 'uuid';
+import {v4} from 'uuid';
 
-export default class User {
-    constructor(name) {
-        this._userId = v4();
-        this._name = name;
-        this._products = [];
+import mongoose from "mongoose";
+
+const Schema = mongoose.Schema;
+
+const userSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    products: {
+        type: Array,
+        default: [],
     }
+}, {timestamps: true});
 
-    get name() {
-        return this._name;
-    }
-
-    get products() {
-        return this._products;
-    }
-
-    set products(value) {
-        this._products = value;
-    }
-
-    get userId() {
-        return this._userId;
-    }
-
+export const User = mongoose.model('User', userSchema);
 
 // 구매내역 추가시키기
-    addProduct(productId) {
-        this._products.push(productId);
-    }
-
-    findProduct(productId) {
-        for (const productIdElement of this.products) {
-            if (productIdElement === productId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+export const addProduct = (userObject, productId) => {
+    userObject.products.push(productId);
 }
+
+export const findProduct = (userObject, productId) => {
+    for (const productIdElement of userObject.products) {
+        if (productIdElement === productId) {
+            return true;
+        }
+    }
+    return false;
+}
+
