@@ -1,9 +1,5 @@
-import {v4} from 'uuid';
-
 import mongoose from "mongoose";
-
 const Schema = mongoose.Schema;
-
 const userSchema = new Schema({
     name: {
         type: String,

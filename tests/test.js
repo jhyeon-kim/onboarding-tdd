@@ -95,13 +95,8 @@ describe('주문의 이전 상태 의존성 테스트', () => {
     });
 });
 
-/* 3. 다음의 경우 결제에 실패한다.
-   1) nicePay api에서의 응답이 3011이 아니면 결제가 불가하다
-   2) 비즈니스 로직 관련
-       (1) 해당 사용자 동일 강의 구매 내역 있음
-       (2) 재고 부족 (예 - 인원수 기준 얼리버드 적용 특가 재고 이미 참)*/
-
-// 1) nicePay api에서의 응답이 3011이 아니면 결제가 불가하다
+ // 3. 다음의 경우 결제에 실패한다.
+ //   1) nicePay api에서의 응답이 3011이 아니면 결제가 불가하다
 
 describe('nicepay로부터의 응답에 따른 처리 테스트', () => {
     test('niceapi 응답코드가 3011이면 카드사 운영시간이 아니므로 결제 불가하다. (실패)', () => {
@@ -112,7 +107,6 @@ describe('nicepay로부터의 응답에 따른 처리 테스트', () => {
         }
     });
 });
-
 
 /*
 2) 비즈니스 로직 관련
@@ -136,11 +130,11 @@ describe('사용자 구매내역에 따른 주문 개시 여부 테스트', () =
         user.products = [];
     });
 
-    test("기존에 구매하지 않았던 강의만 구매할 수 있다. (실패)", () => {
+    test("기존에 구매했던 강의는 구매할 수 없다. (실패)", () => {
         expect(() => initOrder(user, same)).toThrow("User has bought this product before.");
     });
 
-    test("기존에 구매하지 않았던 강의만 구매할 수 있다. (성공)", () => {
+    test("기존에 구매하지 않았던 강의라면 구매할 수 있다. (성공)", () => {
         initOrder(user, different);
     });
 });
@@ -154,9 +148,10 @@ describe('재고에 따른 주문 개시 여부 테스트', () => {
         expect(() => initOrder(user, outOfStockProduct).toThrow(StockError));
     });
 
-    test('재고가 없다면 주문을 개시할 수 없다. (성공)', () => {
+    test('재고가 있다면 주문을 개시할 수 있고, 재고가 하나 줄어든다. (성공)', () => {
+        const stockBefore = enoughStockProduct.stock;
         initOrder(user, enoughStockProduct);
-        //todo 재고의 수도 줄어든다...
+        expect(enoughStockProduct.stock).toEqual(stockBefore -1);
     });
 
 });
