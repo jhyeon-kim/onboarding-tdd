@@ -15,9 +15,6 @@ import StockError from "../app/error/StockError.js";
 import {Product} from "../app/models/Product.js";
 import {addProduct} from "../app/models/User.js";
 
-
-// todo (1) database setup (2) mocking axios response from nicepay (3) anything else..
-
 // 상태 의존성 확인 테스트 : STARTED, PAID, CANCEL_REQUESTED, CANCEL_COMPLETED (, REFUND_REQUESTED, REFUND_COMPLETED)
 
 /*
@@ -34,6 +31,7 @@ import {addProduct} from "../app/models/User.js";
 *       (2) 재고 부족
 * */
 
+// 여러 번 쓸 변수
 let now;
 const userStorage = new UserStorage();
 const user = userStorage.users[0];
@@ -114,7 +112,6 @@ describe('nicepay로부터의 응답에 따른 처리 테스트', () => {
 */
 
 describe('사용자 구매내역에 따른 주문 개시 여부 테스트', () => {
-
     let same;
     let different;
 
@@ -130,7 +127,6 @@ describe('사용자 구매내역에 따른 주문 개시 여부 테스트', () =
             stock: 5000000
         });
         addProduct(user, same.id);
-
     });
 
     afterEach(() => {

@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node ./app/app.js",
+    "dev": "nodemon ./app/app.js",
     "test": "jest",
     "test:cov": "jest --coverage"
   },
