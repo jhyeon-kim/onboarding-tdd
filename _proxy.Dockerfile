@@ -1,6 +1,6 @@
 FROM nginx:latest
 
-COPY proxy/nginx.conf /etc/nginx/nginx.conf
+COPY app/docker/proxy/nginx.conf /etc/nginx/nginx.conf
 
 CMD ["nginx", "-g", "daemon off;"]
 

@@ -1,4 +1,4 @@
 node_modules
-app/docker/_server.Dockerfile
+_server.Dockerfile
 .dockerignore
-app/docker/docker-compose.yml
+docker-compose.yml
