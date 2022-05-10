@@ -1,0 +1,80 @@
+#version: '3'
+#
+#services:
+#  #mongoDB services
+#  mongodb:
+#    container_name: mongodb
+#    image: mongo:latest
+#    restart: always
+#    ports:
+#      - 27017:27017
+#    volumes:
+#      - mongo_db:/data/db
+#
+#  #Node API service
+#  web:
+#    build: .
+#    ports:
+#      - 3000:3000
+#    volumes:
+#      - .:/usr/src/app
+#    container_name: web
+##    environment:
+##      PORT: 3000
+#
+#  proxy:
+#    image: nginx:latest
+#    container_name: proxy
+#    volumes:
+#      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+#    ports:
+#      - 80:80
+##    depends_on:
+##      - web
+##      - mongo_db
+#
+##
+#volumes:
+#  mongo_db: {}
+#
+
+version: '3'
+
+services:
+  #mongoDB services
+  mongodb:
+    container_name: mongodb
+    image: 615496323698.dkr.ecr.us-east-1.amazonaws.com/onboarding-db:latest
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_db:/data/db
+
+  #Node API service
+  web:
+#    build: .
+    image: 615496323698.dkr.ecr.us-east-1.amazonaws.com/onboarding-web:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+    container_name: web
+  #    environment:
+  #      PORT: 3000
+
+  proxy:
+#    image: nginx:latest
+    image: 615496323698.dkr.ecr.us-east-1.amazonaws.com/onboarding-proxy:latest
+    container_name: proxy
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+#    depends_on:
+#      - web
+#      - mongo_db
+
+#
+volumes:
+  mongo_db: {}
