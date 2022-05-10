@@ -103,7 +103,7 @@ describe('nicepay로부터의 응답에 따른 처리 테스트', () => {
             expect(() => completeCancel(order)).toThrow(NiceApiError);
         }
     });
-});
+});go
 
 /*
 2) 비즈니스 로직 관련

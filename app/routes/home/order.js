@@ -9,6 +9,10 @@ router.use(express.json());
 
 const orderService = new OrderService();
 
+router.get("/", (req, res) => {
+    res.send("🍀 hello!! ");
+});
+
 router.get("/db/orders", (req, res) => {
     Order.find()
         .then((result) => {
